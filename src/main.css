@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Utility */
+
+@layer utilities {
+  .flex-center {
+    @apply flex justify-center items-center;
+  }
+
+  .flex-between {
+    @apply flex justify-between items-center;
+  }
+}
+/* All links inside paragraphs are now collorfull */
+p > a {
+  color: #3ec7f4;
+}
+
+/* User selected text is now a better blue */
+html ::selection {
+  background-color: #cbeafb;
+}
+
+html.dark ::selection {
+  background-color: #2b8baa;
+}
+
+html {
+  background-color: #fff;
+}
+
+html.dark {
+  background-color: #000;
+}
+
+html:has(main > div.snappable-page) {
+  scroll-snap-type: y mandatory;
+}
