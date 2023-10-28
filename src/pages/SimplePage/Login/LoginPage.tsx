@@ -1,5 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { SimplePage } from '../SimplePage';
+
+enum Actions {
+  LOGIN,
+  REGISTER,
+}
 
 export function LoginPage() {
-  return <div className="bg-slate-200"></div>;
+  const [action, setAction] = useState();
+  return (
+    <SimplePage>
+      <div></div>
+    </SimplePage>
+  );
 }

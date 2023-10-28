@@ -1,5 +1,10 @@
 import React from 'react';
+import { SimplePage } from '../SimplePage';
 
 export function HomePage() {
-  return <div className="bg-red-200"></div>;
+  return (
+    <SimplePage>
+      <div className="bg-red-200">sasadsd</div>
+    </SimplePage>
+  );
 }
