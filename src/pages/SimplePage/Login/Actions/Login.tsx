@@ -1,10 +1,81 @@
-import React, { useState } from 'react';
+import React, { FormEvent, useContext, useEffect, useState } from 'react';
+import TextInput from '@components/TextInput';
+import { useModal } from '@src/hooks/Modal';
+import { useApi } from '@src/api/api';
+import { useNavigate } from 'react-router-dom';
+import { AuthenticationContext } from '../../../../contexts/Auth';
 
 export function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const auth = useContext(AuthenticationContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (auth?.isAuthenticated) {
+      navigate('/');
+    }
+  }, []);
+  console.log(auth);
+
+  const { login } = useApi();
+  const { openModal } = useModal();
+
+  function handleLogin(event: FormEvent) {
+    event.preventDefault();
+
+    login(email, password)
+      .then(({ data }) => {
+        auth!.setTokens({
+          authToken: {
+            token: data.accessToken,
+            expiresIn: new Date(),
+          },
+          refreshToken: {
+            expiresIn: new Date(),
+            token: 'a',
+          },
+        });
+
+        navigate('/');
+      })
+      .catch((error: any) => {
+        openModal('Erro', error.response.data.message);
+      });
+  }
+
   return (
-    <div>
-      <span className="text-black">deu</span>
-      <span className="font-bold text-green-800">Quadra</span>
+    <div className="p-6 bg-white shadow-md rounded-lg mb-3">
+      <h2 className="text-2xl font-semibold mb-4 text-center">Login</h2>
+      <form onSubmit={handleLogin}>
+        <TextInput
+          label="Email"
+          type="email"
+          id="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Your Email"
+        />
+        <TextInput
+          label="Password"
+          type="password"
+          id="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Your Password"
+        />
+        <div className="flex items-center justify-between">
+          <button
+            type="submit"
+            className="bg-green-500 text-white p-2 rounded-md mt-3 mx-auto hover:bg-green-600"
+          >
+            Login
+          </button>
+        </div>
+      </form>
     </div>
   );
 }
+
+export default Login;

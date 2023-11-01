@@ -24,10 +24,36 @@ export interface AuthResult {
 }
 
 export function useAuth(): AuthResult {
-  const [user, setUser] = useState<User>();
-  const [tokens, setTokens] = useState<Tokens>();
+  // Initialize state with values from localStorage if available
+  const [user, setUser] = useState<User | undefined>(
+    localStorage.getItem('user')
+      ? JSON.parse(localStorage.getItem('user') as string)
+      : undefined
+  );
+  const [tokens, setTokens] = useState<Tokens | undefined>(
+    localStorage.getItem('tokens')
+      ? JSON.parse(localStorage.getItem('tokens') as string)
+      : undefined
+  );
 
   const isAuthenticated = tokens !== undefined;
+
+  // Log in local storage whenever user or tokens change
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem('user', JSON.stringify(user));
+    } else {
+      localStorage.removeItem('user');
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (tokens) {
+      localStorage.setItem('tokens', JSON.stringify(tokens));
+    } else {
+      localStorage.removeItem('tokens');
+    }
+  }, [tokens]);
 
   function logOff() {
     setUser(undefined);

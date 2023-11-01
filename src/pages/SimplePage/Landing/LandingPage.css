@@ -1,0 +1,44 @@
+/* Add this CSS to your stylesheet or styled-components */
+.blurAndDarken {
+    animation: blurAndDarken 1s forwards 2s;
+  } 
+  
+  @keyframes blurAndDarken {
+    0% {
+      filter: blur(0) brightness(1);
+    }
+    100% {
+      filter: blur(3px) brightness(0.5)
+    }
+  }
+
+  .opacityAndUp {
+    opacity: 0;
+    animation: opacityAndUp 1s forwards 3s;
+  } 
+  
+  @keyframes opacityAndUp {
+    0% {
+      opacity: 0;
+
+      translate: 0px 200px;
+    }
+    100% {
+      opacity: 1;
+      translate: 0px 0px;
+    }
+  }
+
+  .fade-in {
+    opacity: 0;
+    animation: opacity 1s forwards 3s;
+  } 
+  
+  @keyframes opacity {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
