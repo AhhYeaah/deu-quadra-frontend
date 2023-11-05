@@ -1,0 +1,7 @@
+.backdrop {
+    @apply absolute top-0 left-0 w-full h-full opacity-70 bg-black flex-center z-10
+}
+
+.backdropable-page:has(.backdrop) {
+    @apply overflow-clip h-screen;
+}
