@@ -1,9 +1,10 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { useAuth } from '../hooks/Auth';
+import { GetCourtsOutput, LoginOutput } from './endpointsOutput';
 
 export interface AuthResult {
-  login: Function;
-  getCourts: Function;
+  login: (email: string, password: string)=> Promise<AxiosResponse<LoginOutput, any>>;
+  getCourts: (lat:number,lon: number, distanceInKillometers: number)=> Promise<AxiosResponse<GetCourtsOutput[], any>>;
 }
 
 export function useApi(): AuthResult {
@@ -14,98 +15,22 @@ export function useApi(): AuthResult {
     baseURL: import.meta.env.VITE_API_URL,
   });
 
-  async function login(email: string, password: string) {
-    return client.post('/users/login', {
+  async function login(email: string, password: string): Promise<AxiosResponse<LoginOutput, any>> {
+    return client.post<LoginOutput>('/users/login', {
       email,
       password,
     });
   }
 
-  async function getCourts() {
-    return {
-      data: [
-        {
-          id: 1,
-          address: 'Rua Salgueiro, 39 - Jardim Belval, Barueri - SP',
-          name: 'Tennis Court A',
-          company: {
-            name: 'Ace Sports Club',
-            id: '001',
-          },
-          price: 25.0,
-        },
-        {
-          id: 1,
-          address: 'Avenida dos Esportes, 123 - Centro, São Paulo - SP',
-          name: 'Basketball Court 1',
-          company: {
-            name: 'Jump Shot Arena',
-            id: '002',
-          },
-          price: 15.0,
-        },
-        {
-          id: 1,
-          address: 'Rua do Futebol, 456 - Vila Esportiva, Campinas - SP',
-          name: 'Soccer Field B',
-          company: {
-            name: 'Goal Kick Stadium',
-            id: '003',
-          },
-          price: 1000.0,
-        },
-        {
-          id: 1,
-          address: 'Rua do Futebol, 456 - Vila Esportiva, Campinas - SP',
-          name: 'Soccer Field B',
-          company: {
-            name: 'Goal Kick Stadium',
-            id: '003',
-          },
-          price: 150.0,
-        },
-        {
-          id: 1,
-          address: 'Rua do Futebol, 456 - Vila Esportiva, Campinas - SP',
-          name: 'Soccer Field B',
-          company: {
-            name: 'Goal Kick Stadium',
-            id: '003',
-          },
-          price: 40.0,
-        },
-        {
-          id: 1,
-          address: 'Rua do Futebol, 456 - Vila Esportiva, Campinas - SP',
-          name: 'Soccer Field B',
-          company: {
-            name: 'Goal Kick Stadium',
-            id: '003',
-          },
-          price: 40.0,
-        },
-        {
-          id: 1,
-          address: 'Rua do Futebol, 456 - Vila Esportiva, Campinas - SP',
-          name: 'Soccer Field B',
-          company: {
-            name: 'Goal Kick Stadium',
-            id: '003',
-          },
-          price: 40.0,
-        },
-        {
-          id: 1,
-          address: 'Rua do Futebol, 456 - Vila Esportiva, Campinas - SP',
-          name: 'Soccer Field B',
-          company: {
-            name: 'Goal Kick Stadium',
-            id: '003',
-          },
-          price: 40.0,
-        },
-      ],
-    };
+  async function getCourts(lat:number,lon: number, distanceInKillometers: number): Promise<AxiosResponse<GetCourtsOutput[], any>> {
+    return client.post<GetCourtsOutput[]>('/courts/search',{
+        coordinates: {
+          lat,lon
+      },
+      properties: {
+          distanceInKillometers
+      }
+    })
   }
   return { login, getCourts };
 }
