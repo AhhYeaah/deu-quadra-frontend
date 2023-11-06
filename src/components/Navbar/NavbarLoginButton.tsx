@@ -2,9 +2,11 @@ import { useContext } from 'react';
 import { AuthenticationContext } from '../../contexts/Auth';
 import defaultPhoto from '@src/assets/default_photo.jpg';
 import { Link, useNavigate } from 'react-router-dom';
+import { LanguageContext } from '../../contexts/Language';
 
 export function NavbarLoginButton() {
   const auth = useContext(AuthenticationContext);
+  const language = useContext(LanguageContext);
   const navigate = useNavigate();
 
   if (auth?.isAuthenticated) {
@@ -12,8 +14,16 @@ export function NavbarLoginButton() {
       <div className="flex flex-row gap-4">
         <div className="flex flex-col items-end">
           <div className="text-sm">
-            Bem vindo, <span className="font-bold">Matheus</span>
+            {language?.language.welcome} <span className="font-bold">Matheus</span>
           </div>
+          <button
+            onClick={() => {
+              language?.handleLanguageChange();
+            }}
+            className="text-xs underline"
+          >
+            {language?.language.changeLanguage}
+          </button>
           <button
             onClick={() => {
               auth.logOff();
@@ -21,7 +31,7 @@ export function NavbarLoginButton() {
             }}
             className="text-xs underline"
           >
-            Deslogar
+            {language?.language.logOff}
           </button>
         </div>
         <div>
@@ -35,7 +45,7 @@ export function NavbarLoginButton() {
         className=" px-6 py-2 border rounded-md border-green-900 text-green-900"
         to="/login"
       >
-        Entre
+        {language?.language.LoginButtonNavbar}
       </Link>
     );
   }

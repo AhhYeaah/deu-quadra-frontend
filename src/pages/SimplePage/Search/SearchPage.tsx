@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { SimplePage } from '../SimplePage';
 import { Card } from './Card/Card';
 import Navbar from '../../../components/Navbar/Navbar';
@@ -6,10 +6,10 @@ import TextInput from '../../../components/TextInput';
 import { useApi } from '../../../api/api';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import './SearchPage.css'
+import './SearchPage.css';
 import { Spinner } from '../../../components/Spinner';
 import { Map } from './Map/Map';
-
+import { LanguageContext } from '../../../contexts/Language';
 
 export function SearchPage() {
   const { getCourts } = useApi();
@@ -18,21 +18,25 @@ export function SearchPage() {
   const [distance, setDistance] = useState(10); // Estado para controlar a distância selecionada
   const [isLoading, setLoading] = useState(true);
   const [position, setPosition] = useState({
-    lat: -23.6283, lon: -46.6409 
-  })
+    lat: -23.6283,
+    lon: -46.6409,
+  });
+
+  const languageContext = useContext(LanguageContext)!;
 
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
 
     axios.get('http://ip-api.com/json/').then(({ data: { lat, lon, city } }: any) => {
-      getCourts(lat, lon, distance).then(({ data }) => { // Usar a distância selecionada
-        setPosition({lat,lon});
+      getCourts(lat, lon, distance).then(({ data }) => {
+        // Usar a distância selecionada
+        setPosition({ lat, lon });
         setCourts(data);
         setCity(city);
-        setLoading(false)
+        setLoading(false);
       });
-    })
-  }, [distance])
+    });
+  }, [distance]);
 
   const handleDistanceChange = (newDistance: number) => {
     setDistance(newDistance); // Atualizar o estado da distância
@@ -42,18 +46,23 @@ export function SearchPage() {
 
   return (
     <SimplePage>
-      <div className='backdropable-page'>
-        {isLoading && <div className='backdrop'><Spinner className='w-16 h-16 text-transparent' /></div>}
+      <div className="backdropable-page">
+        {isLoading && (
+          <div className="backdrop">
+            <Spinner className="w-16 h-16 text-transparent" />
+          </div>
+        )}
 
         <Navbar />
         <div>
           {!isLoading && <Map {...position} courts={courts} distance={distance}></Map>}
-
         </div>
 
         <div className="p-10 grid grid-cols-3 gap-10 bg-white">
           <form className="col-span-1 bg-green-200 rounded-md border border-green-400 p-10">
-            <TextInput placeholder="Localização" />
+            <TextInput
+              placeholder={languageContext.language.searchPageTextFieldPlaceholder}
+            />
             {distanceOptions.map((option) => (
               <div key={option}>
                 <label>
@@ -63,8 +72,8 @@ export function SearchPage() {
                     value={option}
                     checked={distance === option}
                     onChange={() => handleDistanceChange(option)}
-                  />
-                  {' '}{option} km
+                  />{' '}
+                  {option} km
                 </label>
               </div>
             ))}
@@ -74,7 +83,7 @@ export function SearchPage() {
             <div className="flex flex-row gap-1 items-center">
               <span className="text-2xl">{courts.length}</span>
               <span className="text-xl font-light">
-                Quadras para alugar a {distance} km ou menos de {city}.
+                {languageContext.language.courstToRent(distance, city ?? '')}
               </span>
             </div>
             {courts.map((data, index) => {

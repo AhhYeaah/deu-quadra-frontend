@@ -4,6 +4,7 @@ import { useModal } from '@src/hooks/Modal';
 import { useApi } from '@src/api/api';
 import { useNavigate } from 'react-router-dom';
 import { AuthenticationContext } from '../../../../contexts/Auth';
+import { LanguageContext } from '../../../../contexts/Language';
 
 export function Login() {
   const [email, setEmail] = useState('');
@@ -21,6 +22,7 @@ export function Login() {
 
   const { login } = useApi();
   const { openModal } = useModal();
+  const { language } = useContext(LanguageContext)!;
 
   function handleLogin(event: FormEvent) {
     event.preventDefault();
@@ -55,22 +57,22 @@ export function Login() {
           id="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Your Email"
+          placeholder={language.emailButtonPlaceholder}
         />
         <TextInput
-          label="Password"
+          label={language.passwordLabel}
           type="password"
           id="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Your Password"
+          placeholder={language.passwordButtonPlaceholder}
         />
         <div className="flex items-center justify-between">
           <button
             type="submit"
             className="bg-green-500 text-white p-2 rounded-md mt-3 mx-auto hover:bg-green-600"
           >
-            Login
+            {language.LoginPageButton}
           </button>
         </div>
       </form>

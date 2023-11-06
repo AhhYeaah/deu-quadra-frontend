@@ -1,21 +1,22 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { LanguageContext } from '../../../../contexts/Language';
 
 export interface CardProps {
   props: {
-    nome: string,
-    preco: string,
-    descricao: string,
-    idQuadra:number,
-    imagemUrl: string,
+    nome: string;
+    preco: string;
+    descricao: string;
+    idQuadra: number;
+    imagemUrl: string;
     Empresa: {
-        nome: string,
-        idEmpresa: number,
-        rua: string,
-        bairro: string,
-        numero: string,
+      nome: string;
+      idEmpresa: number;
+      rua: string;
+      bairro: string;
+      numero: string;
+    };
   };
-}
 }
 
 function formatPrice(price: number) {
@@ -25,18 +26,19 @@ function formatPrice(price: number) {
 }
 
 export function Card({ props }: CardProps) {
+  const languageContext = useContext(LanguageContext)!;
+
   return (
     <div className=" rounded-sm flex flex-row border bg-white overflow-hidden hover:shadow-xl transition-all duration-300 ">
       <div className="h-[200px] aspect-square">
-        <img
-          src={props.imagemUrl}
-          className="object-cover w-full h-full"
-        />
+        <img src={props.imagemUrl} className="object-cover w-full h-full" />
       </div>
       <div className="flex p-5 flex-col justify-between items-between w-[600px]">
         <div>
           <div className="flex flex-col">
-            <span className="text-xs text-discreet font-bold">{props.Empresa.bairro}, {props.Empresa.rua}, {props.Empresa.numero} </span>
+            <span className="text-xs text-discreet font-bold">
+              {props.Empresa.bairro}, {props.Empresa.rua}, {props.Empresa.numero}{' '}
+            </span>
             <span className="text-xl whitespace-nowrap overflow-hidden text-ellipsis">
               {props.nome}
             </span>
@@ -56,7 +58,7 @@ export function Card({ props }: CardProps) {
             to={'/allocate/' + props.idQuadra}
             className="px-5 py-2 text-green-600 border rounded-sm border-green-500 hover:bg-green-500 hover:text-white"
           >
-            Alugar
+            {languageContext.language.cardButtonAction}
           </Link>
         </div>
       </div>

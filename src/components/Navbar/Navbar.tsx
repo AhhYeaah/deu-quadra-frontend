@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Logo } from '../Logo';
 import { AuthenticationContext } from '../../contexts/Auth';
 import { NavbarLoginButton } from './NavbarLoginButton';
+import LanguageSelector from './LanguageSelector';
 
 export interface NavbarProps {
   className?: string;

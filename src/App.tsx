@@ -14,6 +14,8 @@ import { Modal } from '@components/Modal/Modal';
 import { ModalProvider } from '@components/Modal/ModalProvider';
 import { LandingPage } from './pages/SimplePage/Landing/LandingPage';
 import { AllocatePage } from './pages/SimplePage/Allocate/AllocatePage';
+import { LanguageContext } from './contexts/Language';
+import { LanguageProvider } from './hooks/Language';
 
 export function App() {
   const authentication = useAuth();
@@ -21,24 +23,26 @@ export function App() {
   return (
     <div>
       <ModalProvider>
-        <AuthenticationContext.Provider value={authentication}>
-          <Modal />
-          <Router>
-            <Routes>
-              <Route path="/" element={<LandingPage />}></Route>
-              <Route path="/login" element={<LoginPage />}></Route>
-              <Route path="/search" element={<SearchPage />} />
-              <Route
-                path="/allocate/:id"
-                element={
-                  <GuardedRoute>
-                    <AllocatePage />
-                  </GuardedRoute>
-                }
-              />
-            </Routes>
-          </Router>
-        </AuthenticationContext.Provider>
+        <LanguageProvider>
+          <AuthenticationContext.Provider value={authentication}>
+            <Modal />
+            <Router>
+              <Routes>
+                <Route path="/" element={<LandingPage />}></Route>
+                <Route path="/login" element={<LoginPage />}></Route>
+                <Route path="/search" element={<SearchPage />} />
+                <Route
+                  path="/allocate/:id"
+                  element={
+                    <GuardedRoute>
+                      <AllocatePage />
+                    </GuardedRoute>
+                  }
+                />
+              </Routes>
+            </Router>
+          </AuthenticationContext.Provider>
+        </LanguageProvider>
       </ModalProvider>
     </div>
   );

@@ -5,6 +5,8 @@ import { LoadingPage } from '../Loading/LoadingPage';
 import { SimplePage } from '../SimplePage';
 import Navbar from '../../../components/Navbar/Navbar';
 import { Link } from 'react-router-dom';
+import { MainTitle } from './MainTitle';
+import { SearchButton } from './SearchButton';
 
 export function LandingPage() {
   const [loading, setIsLoading] = useState(true);
@@ -39,17 +41,8 @@ export function LandingPage() {
             />
           </div>
           <div className="flex-center flex-col gap-10">
-            <h1 className="text-5xl text-center text-white max-w-screen-lg font-light opacityAndUp">
-              Jogue com <span className="text-green-500 font-normal ">estilo</span>,
-              reserve com facilidade: a sua quadra esportiva está a{' '}
-              <span className="text-green-500 font-normal ">um clique de distância</span>
-            </h1>
-            <Link
-              to="/search"
-              className="bg-green-800 hover:bg-green-700 transition-colors px-5 py-3 rounded-md text-white opacityAndUp"
-            >
-              Buscar por quadras
-            </Link>
+            <MainTitle></MainTitle>
+            <SearchButton></SearchButton>
           </div>
         </section>
       </div>
