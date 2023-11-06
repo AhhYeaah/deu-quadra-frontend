@@ -4,8 +4,6 @@ import { Card } from './Card/Card';
 import Navbar from '../../../components/Navbar/Navbar';
 import TextInput from '../../../components/TextInput';
 import { useApi } from '../../../api/api';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
 import './SearchPage.css';
 import { Spinner } from '../../../components/Spinner';
 import { Map } from './Map/Map';
@@ -13,7 +11,6 @@ import { LanguageContext } from '../../../contexts/Language';
 
 export function SearchPage() {
   const { getCourts } = useApi();
-  const [city, setCity] = useState(undefined);
   const [courts, setCourts] = useState([]);
   const [distance, setDistance] = useState(10); // Estado para controlar a distância selecionada
   const [isLoading, setLoading] = useState(true);
@@ -27,15 +24,28 @@ export function SearchPage() {
   useEffect(() => {
     setLoading(true);
 
-    axios.get('http://ip-api.com/json/').then(({ data: { lat, lon, city } }: any) => {
-      getCourts(lat, lon, distance).then(({ data }) => {
-        // Usar a distância selecionada
-        setPosition({ lat, lon });
-        setCourts(data);
-        setCity(city);
-        setLoading(false);
-      });
-    });
+    // Use Geolocation API to get user's position
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+
+          getCourts(latitude, longitude, distance).then(({ data }) => {
+            setPosition({ lat: latitude, lon: longitude });
+            setCourts(data);
+            setLoading(false);
+          });
+        },
+        (error) => {
+          setLoading(false);
+        },
+        { enableHighAccuracy: true, maximumAge: 0 }
+      );
+    } else {
+      // Handle the case where Geolocation is not available
+      setLoading(false);
+      console.error('Geolocation is not available');
+    }
   }, [distance]);
 
   const handleDistanceChange = (newDistance: number) => {
@@ -83,7 +93,7 @@ export function SearchPage() {
             <div className="flex flex-row gap-1 items-center">
               <span className="text-2xl">{courts.length}</span>
               <span className="text-xl font-light">
-                {languageContext.language.courstToRent(distance, city ?? '')}
+                {languageContext.language.courstToRent(distance, 'São Paulo')}
               </span>
             </div>
             {courts.map((data, index) => {
